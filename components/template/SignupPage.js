@@ -14,7 +14,7 @@ function SignupPage() {
     });
     const data = await res.json();
     console.log(data);
-    if (data.status === "seccess") {
+    if (data.status === "success") {
       router.push("/signin");
     }
   };
