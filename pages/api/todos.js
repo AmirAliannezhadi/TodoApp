@@ -13,14 +13,13 @@ export default async function handler(req, res) {
   }
 
   const session = await getSession({ req });
-  console.log(session);
   if (!session) {
     return res
       .status(401)
       .json({ status: "failed", message: "You are not logged in" });
   }
 
-  const user = User.findOne({ email: session.user.email });
+  const user = await User.findOne({ email: session.user.email });
   if (!user) {
     return res
       .status(404)
@@ -34,10 +33,9 @@ export default async function handler(req, res) {
         .status(422)
         .json({ status: "failed", message: "Invalid Data" });
     }
+    user.todos.push({ title, status });
+    user.save();
+
+    res.status(201).json({ status: "success", message: "Todo created" });
   }
-
-  user.todos.push({ title, status });
-  user.save();
-
-  res.status(201).json({ status: "success", message: "Todo created" });
 }
