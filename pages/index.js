@@ -1,4 +1,5 @@
+import HomePage from "../components/template/HomePage";
 
 export default function Home() {
-  return <h1>Todo App</h1>
+  return <HomePage />
 }
