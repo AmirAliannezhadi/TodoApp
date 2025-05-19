@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Tasks from "../module/Tasks";
 
 function HomePage() {
   const [todos, setTodos] = useState([]);
@@ -8,23 +9,29 @@ function HomePage() {
   const fetchTodos = async () => {
     const res = await fetch("/api/todos");
     const data = await res.json();
-    if (data.status === "success") setTodos(data.data.todos)
+    if (data.status === "success") setTodos(data.data.todos);
   };
-console.log(todos);
-  return <div className="home-page">
-    <div className="home-page--todo">
+  console.log(todos);
+  return (
+    <div className="home-page">
+      <div className="home-page--todo">
         <p>todo</p>
-    </div>
-    <div className="home-page--inProgress">
+        <Tasks data={todos.todo} />
+      </div>
+      <div className="home-page--inProgress">
         <p>In Progress</p>
-    </div>
-    <div className="home-page--review">
+        <Tasks data={todos.inProgress} />
+      </div>
+      <div className="home-page--review">
         <p>Review</p>
-    </div>
-    <div className="home-page--done">
+        <Tasks data={todos.review} />
+      </div>
+      <div className="home-page--done">
         <p>Done</p>
+        <Tasks data={todos.done} />
+      </div>
     </div>
-  </div>;
+  );
 }
 
 export default HomePage;
