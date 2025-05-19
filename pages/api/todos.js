@@ -45,4 +45,22 @@ export default async function handler(req, res) {
     const sortedData = sortTodos(user.todos);
     res.status(200).json({ status: "success", data: { todos: sortedData } });
   }
+
+  // PATCH
+  else if (req.method === "PATCH") {
+    const { id, status } = req.body;
+    if (!id || !status) {
+      return res
+        .status(422)
+        .json({ status: "failed", message: "Invalid Data" });
+    }
+
+    const result = await User.updateOne(
+      { "todos._id": id },
+      { $set: { "todos.$.status": status } }
+    );
+
+    console.log(result);
+    res.status(200).json({status: "success"})
+  }
 }
