@@ -29,6 +29,7 @@ export default async function handler(req, res) {
 
   if (req.method === "POST") {
     const { name, lastName, password } = req.body;
+;
 
     const isValid = await verifyPassword(password, user.password);
     if (!isValid) {
@@ -44,7 +45,7 @@ export default async function handler(req, res) {
     res
       .status(200)
       .json({
-        status: "failed",
+        status: "success",
         data: { name, lastName, email: session.user.email },
       });
   }
