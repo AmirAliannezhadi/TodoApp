@@ -1,16 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import ProfileForm from "../module/ProfileForm";
+import ProfileData from "../module/profileData";
 
 function ProfilePage() {
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  const fetchProfile = async () => {
+    const res = await fetch("/api/profile");
+    const data = await res.json();
+    if (data.status === "success" && data.data.name && data.data.lastName) {
+      setData(data.data);
+    }
+  };
+
 
   const submitHandler = async () => {
     const res = await fetch("/api/profile", {
       method: "POST",
-      body: JSON.stringify({name, lastName, password}),
+      body: JSON.stringify({ name, lastName, password }),
       headers: { "Content-Type": "application/json" },
     });
     const data = await res.json();
@@ -22,15 +37,19 @@ function ProfilePage() {
       <h2>
         <CgProfile /> Profile
       </h2>
-      <ProfileForm
-        name={name}
-        lastName={lastName}
-        password={password}
-        setName={setName}
-        setLastName={setLastName}
-        setPassword={setPassword}
-        submitHandler={submitHandler}
-      />
+      {data ? (
+        <ProfileData data={data}/>
+      ) : (
+        <ProfileForm
+          name={name}
+          lastName={lastName}
+          password={password}
+          setName={setName}
+          setLastName={setLastName}
+          setPassword={setPassword}
+          submitHandler={submitHandler}
+        />
+      )}
     </div>
   );
 }
